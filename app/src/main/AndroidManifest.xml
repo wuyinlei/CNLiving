@@ -28,6 +28,8 @@
         <activity android:name=".ui.register.RegisterActivity">
         </activity>
         <activity android:name=".ui.editprofile.EditProfileActivity"/>
+
+        <activity android:name=".ui.live.CreateLiveActivity"/>
     </application>
 
 </manifest>

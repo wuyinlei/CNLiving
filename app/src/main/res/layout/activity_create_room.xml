@@ -55,17 +55,6 @@
                 android:text="标题"
                 android:textSize="18sp" />
 
-            <EditText
-                android:id="@+id/title"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:hint="请输入直播的标题"
-                android:lines="1"
-                android:maxLength="32"
-                android:padding="10dp"
-                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -108,5 +97,19 @@
         android:text="开始直播"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_weight="4"
+        android:background="@null"
+        android:hint="请输入直播的标题"
+        android:lines="1"
+        android:maxLength="32"
+        android:padding="10dp"
+        android:textSize="20sp"/>
 </RelativeLayout>
 
