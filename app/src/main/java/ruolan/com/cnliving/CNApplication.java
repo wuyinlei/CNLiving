@@ -13,6 +13,8 @@ import com.tencent.livesdk.ILVLiveManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import ruolan.com.cnliving.util.QnUploadHelper;
+
 /**
  * Created by wuyinlei on 2017/11/14.
  *
@@ -47,6 +49,11 @@ public class CNApplication extends Application {
         //初始化直播场景
         mLiveConfig = new ILVLiveConfig();
         ILVLiveManager.getInstance().init(mLiveConfig);
+
+        QnUploadHelper.init("r5Gmrjbc9VZKnVIttU3JInHdW3iwK6SACE2_a-d3",
+                "2saF0tYPYvND-oGCpcD8phMHJyhuN4mnffapc7HG",
+                "http://ozejm5ujq.bkt.clouddn.com/",
+                "ruolan");
 
         LeakCanary.install(this);
     }

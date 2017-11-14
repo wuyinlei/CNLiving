@@ -15,6 +15,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 /**
  * Created by Administrator on 2017/4/3.
+ *
+ * @function
  */
 
 public class QnUploadHelper {
