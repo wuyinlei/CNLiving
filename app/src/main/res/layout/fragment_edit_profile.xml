@@ -49,27 +49,27 @@
                     android:layout_marginLeft="5dp" />
             </LinearLayout>
 
-            <imooc.com.bearlive.editprofile.ProfileEdit
+            <ruolan.com.cnliving.ui.editprofile.ProfileEdit
                 android:id="@+id/nick_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <imooc.com.bearlive.editprofile.ProfileEdit
+            <ruolan.com.cnliving.ui.editprofile.ProfileEdit
                 android:id="@+id/gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <imooc.com.bearlive.editprofile.ProfileEdit
+            <ruolan.com.cnliving.ui.editprofile.ProfileEdit
                 android:id="@+id/sign"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <imooc.com.bearlive.editprofile.ProfileEdit
+            <ruolan.com.cnliving.ui.editprofile.ProfileEdit
                 android:id="@+id/renzheng"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <imooc.com.bearlive.editprofile.ProfileEdit
+            <ruolan.com.cnliving.ui.editprofile.ProfileEdit
                 android:id="@+id/location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -79,22 +79,22 @@
                 android:layout_height="1px"
                 android:background="#333" />
 
-            <imooc.com.bearlive.editprofile.ProfileTextView
+            <ruolan.com.cnliving.ui.editprofile.ProfileTextView
                 android:id="@+id/id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <imooc.com.bearlive.editprofile.ProfileTextView
+            <ruolan.com.cnliving.ui.editprofile.ProfileTextView
                 android:id="@+id/level"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <imooc.com.bearlive.editprofile.ProfileTextView
+            <ruolan.com.cnliving.ui.editprofile.ProfileTextView
                 android:id="@+id/get_nums"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <imooc.com.bearlive.editprofile.ProfileTextView
+            <ruolan.com.cnliving.ui.editprofile.ProfileTextView
                 android:id="@+id/send_nums"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

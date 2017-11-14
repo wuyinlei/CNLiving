@@ -4,11 +4,10 @@
     android:id="@+id/activity_edit_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="imooc.com.bearlive.editprofile.EditProfileActivity">
+    android:orientation="vertical">
 
     <fragment
-        android:name="imooc.com.bearlive.editprofile.EditProfileFragment"
+        android:name="ruolan.com.cnliving.ui.editprofile.EditProfileFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>
