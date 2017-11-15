@@ -1,16 +1,27 @@
 package ruolan.com.cnliving.ui.live;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.tencent.TIMUserProfile;
+
+import ruolan.com.cnliving.CNApplication;
 import ruolan.com.cnliving.R;
+import ruolan.com.cnliving.model.RoomInfo;
+import ruolan.com.cnliving.net.BaseRequest;
+import ruolan.com.cnliving.ui.hostlive.HostLiveActivity;
+import ruolan.com.cnliving.util.ImgUtils;
+import ruolan.com.cnliving.util.PicChooserHelper;
 
 /**
  * Created by wuyinlei on 2017/11/14.
@@ -72,13 +83,69 @@ public class CreateLiveActivity extends AppCompatActivity {
         }
     };
 
-    private void choosePic() {
+    private PicChooserHelper mPicChooserHelper;
 
+    private void choosePic() {
+        if (mPicChooserHelper == null) {
+            mPicChooserHelper = new PicChooserHelper(this, PicChooserHelper.PicType.Cover);
+            mPicChooserHelper.setOnChooseResultListener(new PicChooserHelper.OnChooseResultListener() {
+                @Override
+                public void onSuccess(String url) {
+                    //获取图片成功
+                    updateCover(url);
+                }
+
+                @Override
+                public void onFail(String msg) {
+                    //获取图片失败
+                    Toast.makeText(CreateLiveActivity.this, "选择失败：" + msg, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        mPicChooserHelper.showPicChooserDialog();
 
     }
 
+    private String coverUrl = null;
+
+    private void updateCover(String url) {
+        coverUrl = url;
+        ImgUtils.load(url, mCoverImg);
+        mCoverTipTxt.setVisibility(View.GONE);
+    }
+
+
     private void requestCreateRoom() {
 
+        CreateRoomRequest.CreateRoomParam param = new CreateRoomRequest.CreateRoomParam();
+        TIMUserProfile selfProfile = CNApplication.getApplication().getSelfProfile();
+        param.userId = selfProfile.getIdentifier();
+        param.userAvatar = selfProfile.getFaceUrl();
+        String nickName = selfProfile.getNickName();
+        param.userName = TextUtils.isEmpty(nickName) ? selfProfile.getIdentifier() : nickName;
+        param.liveTitle = mTitleEt.getText().toString();
+        param.liveCover = coverUrl;
+
+        //创建房间
+        CreateRoomRequest request = new CreateRoomRequest();
+        request.setOnResultListener(new BaseRequest.OnResultListener<RoomInfo>() {
+            @Override
+            public void onFail(int code, String msg) {
+                Toast.makeText(CreateLiveActivity.this, "请求失败：" + msg, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(RoomInfo roomInfo) {
+                Toast.makeText(CreateLiveActivity.this, "请求成功：" + roomInfo.roomId, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.setClass(CreateLiveActivity.this, HostLiveActivity.class);
+                intent.putExtra("roomId", roomInfo.roomId);
+                startActivity(intent);
+
+                finish();
+            }
+
+        });
 
     }
 }

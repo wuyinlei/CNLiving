@@ -30,6 +30,8 @@
         <activity android:name=".ui.editprofile.EditProfileActivity"/>
 
         <activity android:name=".ui.live.CreateLiveActivity"/>
+
+        <activity android:name=".ui.hostlive.HostLiveActivity"/>
     </application>
 
 </manifest>

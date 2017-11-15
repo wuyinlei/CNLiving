@@ -15,11 +15,14 @@ import com.tencent.TIMUserProfile;
 
 import java.io.File;
 import java.io.IOException;
+
 import ruolan.com.cnliving.CNApplication;
 import ruolan.com.cnliving.widget.PicChooseDialog;
 
 /**
  * Created by Administrator.
+ *
+ * @function 图片选择辅助类
  */
 
 public class PicChooserHelper {
@@ -182,12 +185,12 @@ public class PicChooserHelper {
         cropUri = createCropUri();
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.putExtra("crop", "true");
-        if(mPicType == PicType.Avatar) {
+        if (mPicType == PicType.Avatar) {
             intent.putExtra("aspectX", 300);
             intent.putExtra("aspectY", 300);
             intent.putExtra("outputX", 300);
             intent.putExtra("outputY", 300);
-        }else if(mPicType == PicType.Cover){
+        } else if (mPicType == PicType.Cover) {
             intent.putExtra("aspectX", 500);
             intent.putExtra("aspectY", 300);
             intent.putExtra("outputX", 500);
