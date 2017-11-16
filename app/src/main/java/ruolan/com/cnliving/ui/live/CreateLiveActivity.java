@@ -37,6 +37,7 @@ public class CreateLiveActivity extends AppCompatActivity {
     private EditText mTitleEt;
     private TextView mCreateRoomBtn;
     private TextView mRoomNoText;
+    private EditText mEtLiveTitle;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class CreateLiveActivity extends AppCompatActivity {
         mTitleEt = (EditText) findViewById(R.id.title);
         mCreateRoomBtn = (TextView) findViewById(R.id.create);
         mRoomNoText = (TextView) findViewById(R.id.room_no);
+        mEtLiveTitle = (EditText) findViewById(R.id.et_live_title);
     }
 
     private void setListeners() {
@@ -74,6 +76,7 @@ public class CreateLiveActivity extends AppCompatActivity {
         public void onClick(View view) {
             int id = view.getId();
             if (id == R.id.create) {
+                mCreateRoomBtn.setClickable(false);
                 //创建直播
                 requestCreateRoom();
             } else if (id == R.id.set_cover) {
@@ -123,15 +126,26 @@ public class CreateLiveActivity extends AppCompatActivity {
         param.userAvatar = selfProfile.getFaceUrl();
         String nickName = selfProfile.getNickName();
         param.userName = TextUtils.isEmpty(nickName) ? selfProfile.getIdentifier() : nickName;
-        param.liveTitle = mTitleEt.getText().toString();
+        String liveTitle = mEtLiveTitle.getText().toString();
+        if (TextUtils.isEmpty(liveTitle)) {
+            Toast.makeText(this, "直播标题不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        param.liveTitle = liveTitle;
+        if (TextUtils.isEmpty(coverUrl)) {
+            coverUrl = "http://ozejm5ujq.bkt.clouddn.com/_1510838000902_avatar";
+        }
         param.liveCover = coverUrl;
 
         //创建房间
         CreateRoomRequest request = new CreateRoomRequest();
+//        request.getUrl(param);
+        request.request(request.getUrl(param));
         request.setOnResultListener(new BaseRequest.OnResultListener<RoomInfo>() {
             @Override
             public void onFail(int code, String msg) {
                 Toast.makeText(CreateLiveActivity.this, "请求失败：" + msg, Toast.LENGTH_SHORT).show();
+                mCreateRoomBtn.setClickable(true);
             }
 
             @Override
@@ -143,9 +157,20 @@ public class CreateLiveActivity extends AppCompatActivity {
                 startActivity(intent);
 
                 finish();
+
+                mCreateRoomBtn.setClickable(true);
             }
 
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mPicChooserHelper != null) {
+            mPicChooserHelper.onActivityResult(requestCode, resultCode, data);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

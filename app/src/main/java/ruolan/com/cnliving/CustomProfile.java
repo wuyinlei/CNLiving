@@ -4,13 +4,15 @@ import com.tencent.TIMFriendshipManager;
 
 /**
  * Created by wuyinlei on 2017/11/14.
+ *
+ * @function
  */
 
 public class CustomProfile {
 
     //自定义字段
     private static final String PREFIX = "Tag_Profile_Custom_";
-    public static final String CUSTOM_RENZHENG = PREFIX + "renzhen";
+    public static final String CUSTOM_RENZHENG = PREFIX + "renzheng";
     public static final String CUSTOM_LEVEL = PREFIX + "level";
     public static final String CUSTOM_GET = PREFIX + "getNums";
     public static final String CUSTOM_SEND = PREFIX + "sendNums";

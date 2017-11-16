@@ -32,7 +32,7 @@ public class CreateRoomRequest extends BaseRequest {
 
     public String getUrl(CreateRoomParam param) {
         return Action
-                + "&" + RequestParamKey_UserId + "=" + param.userId
+                + "?" + RequestParamKey_UserId + "=" + param.userId
                 + "&" + RequestParamKey_UserAvatar + "=" + param.userAvatar
                 + "&" + RequestParamKey_UserName + "=" + param.userName
                 + "&" + RequestParamKey_LiveTitle + "=" + param.liveTitle

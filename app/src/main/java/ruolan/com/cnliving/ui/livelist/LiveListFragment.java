@@ -16,6 +16,8 @@ import ruolan.com.cnliving.R;
 
 /**
  * Created by wuyinlei on 2017/11/14.
+ *
+ * @function
  */
 
 public class LiveListFragment extends Fragment {
