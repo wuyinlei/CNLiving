@@ -21,6 +21,7 @@ import ruolan.com.cnliving.model.RoomInfo;
 import ruolan.com.cnliving.ui.hostlive.HostLiveActivity;
 import ruolan.com.cnliving.util.ImgUtils;
 import ruolan.com.cnliving.util.PicChooserHelper;
+import ruolan.com.cnliving.util.request.BaseRequest;
 
 /**
  * Created by wuyinlei on 2017/11/14.
