@@ -2,6 +2,8 @@ package ruolan.com.cnliving.model;
 
 /**
  * Created by wuyinlei on 2017/11/15.
+ *
+ * @function
  */
 
 public class RoomInfo {

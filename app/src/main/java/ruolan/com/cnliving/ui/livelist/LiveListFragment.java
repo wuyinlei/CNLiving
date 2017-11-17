@@ -58,14 +58,21 @@ public class LiveListFragment extends Fragment {
         mLiveListAdapter = new LiveListAdapter(getContext());
         mLiveListView.setAdapter(mLiveListAdapter);
 
+
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_list);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 //请求服务器，获取直播列表
+
                 requestLiveList();
             }
         });
+
+        //进入界面之后主动刷新数据
+        mSwipeRefreshLayout.setRefreshing(true);
+        requestLiveList();
+
     }
 
     private void requestLiveList() {

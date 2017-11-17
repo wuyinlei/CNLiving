@@ -17,7 +17,7 @@ public class GetLiveListRequest extends BaseRequest {
         public int pageIndex;
 
         public String toUrlParam() {
-            return "&=pageIndex" + pageIndex;
+            return "&pageIndex=" + pageIndex;
         }
     }
 
