@@ -2,8 +2,8 @@ package ruolan.com.cnliving.ui.live;
 
 import java.io.IOException;
 
-import ruolan.com.cnliving.net.BaseRequest;
 import ruolan.com.cnliving.net.ResponseObject;
+import ruolan.com.cnliving.util.request.BaseRequest;
 
 /**
  * Created by wuyinlei on 2017/11/15.
@@ -13,7 +13,7 @@ import ruolan.com.cnliving.net.ResponseObject;
 
 public class CreateRoomRequest extends BaseRequest {
 
-    private static final String Action = "http://192.168.0.103:8080/CNLive/roomServlet";
+    private static final String Action = "http://192.168.0.103:8080/CNLive/roomServlet?action=create";
 
 
     private static final String RequestParamKey_UserId = "userId";

@@ -18,7 +18,6 @@ import com.tencent.TIMUserProfile;
 import ruolan.com.cnliving.CNApplication;
 import ruolan.com.cnliving.R;
 import ruolan.com.cnliving.model.RoomInfo;
-import ruolan.com.cnliving.net.BaseRequest;
 import ruolan.com.cnliving.ui.hostlive.HostLiveActivity;
 import ruolan.com.cnliving.util.ImgUtils;
 import ruolan.com.cnliving.util.PicChooserHelper;
