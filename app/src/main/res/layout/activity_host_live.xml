@@ -48,7 +48,7 @@
             android:layout_weight="1"/>
     </LinearLayout>
 
-    <imooc.com.bearlive.view.DanmuView
+    <ruolan.com.cnliving.customerview.DanmuView
         android:id="@+id/danmu_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

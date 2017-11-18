@@ -12,6 +12,7 @@ import com.tencent.TIMUserProfile;
 import com.tencent.av.sdk.AVRoomMulti;
 import com.tencent.ilivesdk.ILiveCallBack;
 import com.tencent.ilivesdk.core.ILiveLoginManager;
+import com.tencent.ilivesdk.core.ILiveRoomManager;
 import com.tencent.ilivesdk.view.AVRootView;
 import com.tencent.livesdk.ILVCustomCmd;
 import com.tencent.livesdk.ILVLiveConfig;
@@ -212,32 +213,49 @@ public class HostLiveActivity extends AppCompatActivity {
         mChatView = (ChatView) findViewById(R.id.chat_view);
         mChatView.setOnChatSendListener(new ChatView.OnChatSendListener() {
             @Override
-            public void onChatSend(ILVCustomCmd msg) {
+            public void onChatSend(final ILVCustomCmd msg) {
+
                 //发送消息
-                if (msg.getCmd() == Constants.CMD_CHAT_MSG_LIST) {
-                    String chatContent = msg.getParam();
-                    String sendId = CNApplication.getApplication().getSelfProfile().getIdentifier();
-                    String avatar = CNApplication.getApplication().getSelfProfile().getFaceUrl();
+                msg.setDestId(ILiveRoomManager.getInstance().getIMGroupId());
 
-                    ChatMsgInfo info = ChatMsgInfo.createListInfo(chatContent, sendId, avatar);
-                    mChatListView.addMsgInfo(info);
 
-                } else if (msg.getCmd() == Constants.CMD_CHAT_MSG_DANMU){
-                    String chatContent = msg.getParam();
-                    String userId = CNApplication.getApplication().getSelfProfile().getIdentifier();
-                    String avatar = CNApplication.getApplication().getSelfProfile().getFaceUrl();
-                    ChatMsgInfo info = ChatMsgInfo.createListInfo(chatContent, userId, avatar);
-                    mChatListView.addMsgInfo(info);
+                ILVLiveManager.getInstance().sendCustomCmd(msg, new ILiveCallBack() {
+                    @Override
+                    public void onSuccess(Object data) {
+                        //发送消息
+                        if (msg.getCmd() == Constants.CMD_CHAT_MSG_LIST) {
+                            String chatContent = msg.getParam();
+                            String sendId = CNApplication.getApplication().getSelfProfile().getIdentifier();
+                            String avatar = CNApplication.getApplication().getSelfProfile().getFaceUrl();
 
-                    String name = CNApplication.getApplication().getSelfProfile().getNickName();
-                    if (TextUtils.isEmpty(name)) {
-                        name = userId;
+                            ChatMsgInfo info = ChatMsgInfo.createListInfo(chatContent, sendId, avatar);
+                            mChatListView.addMsgInfo(info);
+
+                        } else if (msg.getCmd() == Constants.CMD_CHAT_MSG_DANMU){
+                            String chatContent = msg.getParam();
+                            String userId = CNApplication.getApplication().getSelfProfile().getIdentifier();
+                            String avatar = CNApplication.getApplication().getSelfProfile().getFaceUrl();
+                            ChatMsgInfo info = ChatMsgInfo.createListInfo(chatContent, userId, avatar);
+                            mChatListView.addMsgInfo(info);
+
+                            String name = CNApplication.getApplication().getSelfProfile().getNickName();
+                            if (TextUtils.isEmpty(name)) {
+                                name = userId;
+                            }
+                            ChatMsgInfo danmuInfo = ChatMsgInfo.createDanmuInfo(chatContent, userId, avatar, name);
+                            mDanmuView.addMsgInfo(danmuInfo);
+
+
+                        }
                     }
-                    ChatMsgInfo danmuInfo = ChatMsgInfo.createDanmuInfo(chatContent, userId, avatar, name);
-                    mDanmuView.addMsgInfo(danmuInfo);
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+
+                    }
+                });
 
 
-                }
 
 
             }

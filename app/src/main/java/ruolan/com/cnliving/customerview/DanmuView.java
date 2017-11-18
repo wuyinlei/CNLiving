@@ -14,13 +14,16 @@ import ruolan.com.cnliving.model.ChatMsgInfo;
 
 /**
  * Created by wuyinlei on 2017/11/18.
+ *
+ * @function
  */
 
 public class DanmuView extends LinearLayout {
+
     private static final String TAG = DanmuView.class.getSimpleName();
     private DanmuItemView item0, item1, item2, item3;
 
-    private List<ChatMsgInfo> msgInfoList = new LinkedList<ChatMsgInfo>();
+    private List<ChatMsgInfo> msgInfoList = new LinkedList<>();
 
     public DanmuView(Context context) {
         super(context);
@@ -98,6 +101,7 @@ public class DanmuView extends LinearLayout {
         if (item3.getVisibility() != VISIBLE) {
             return item3;
         }
+
         return null;
     }
 }

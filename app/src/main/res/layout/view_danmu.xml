@@ -4,22 +4,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <imooc.com.bearlive.view.DanmuItemView
+    <ruolan.com.cnliving.customerview.DanmuItemView
         android:id="@+id/danmu3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <imooc.com.bearlive.view.DanmuItemView
+    <ruolan.com.cnliving.customerview.DanmuItemView
         android:id="@+id/danmu2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <imooc.com.bearlive.view.DanmuItemView
+    <ruolan.com.cnliving.customerview.DanmuItemView
         android:id="@+id/danmu1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <imooc.com.bearlive.view.DanmuItemView
+    <ruolan.com.cnliving.customerview.DanmuItemView
         android:id="@+id/danmu0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
