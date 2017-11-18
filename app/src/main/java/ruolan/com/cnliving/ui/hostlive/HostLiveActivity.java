@@ -6,17 +6,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.tencent.TIMMessage;
+import com.tencent.TIMUserProfile;
 import com.tencent.av.sdk.AVRoomMulti;
 import com.tencent.ilivesdk.ILiveCallBack;
 import com.tencent.ilivesdk.core.ILiveLoginManager;
 import com.tencent.ilivesdk.view.AVRootView;
 import com.tencent.livesdk.ILVCustomCmd;
+import com.tencent.livesdk.ILVLiveConfig;
+import com.tencent.livesdk.ILVLiveConstants;
 import com.tencent.livesdk.ILVLiveManager;
 import com.tencent.livesdk.ILVLiveRoomOption;
+import com.tencent.livesdk.ILVText;
 
+import java.lang.reflect.Constructor;
+
+import ruolan.com.cnliving.CNApplication;
 import ruolan.com.cnliving.R;
 import ruolan.com.cnliving.customerview.BottomControlView;
+import ruolan.com.cnliving.customerview.ChatMsgListView;
 import ruolan.com.cnliving.customerview.ChatView;
+import ruolan.com.cnliving.model.ChatMsgInfo;
+import ruolan.com.cnliving.model.Constants;
 import ruolan.com.cnliving.widget.SizeChangeRelativeLayout;
 
 /**
@@ -31,6 +42,7 @@ public class HostLiveActivity extends AppCompatActivity {
     private AVRootView mLiveView;
     private BottomControlView mControlView;
     private ChatView mChatView;
+    private ChatMsgListView mChatListView;
 
     private int mRoomId;
 
@@ -53,6 +65,48 @@ public class HostLiveActivity extends AppCompatActivity {
             return;
         }
 
+        ILVLiveConfig liveConfig = CNApplication.getApplication().getLiveConfig();
+        liveConfig.setLiveMsgListener(new ILVLiveConfig.ILVLiveMsgListener() {
+            @Override
+            public void onNewTextMsg(ILVText text, String SenderId, TIMUserProfile userProfile) {
+                //接收到文本消息
+
+
+            }
+
+            @Override
+            public void onNewCustomMsg(ILVCustomCmd cmd, String sendId, TIMUserProfile userProfile) {
+                //接收到自定义消息
+                if (cmd.getCmd() == Constants.CMD_CHAT_MSG_LIST) {
+                    //得到的是聊天列表消息
+                    String content = cmd.getParam();
+                    ChatMsgInfo chatMsgInfo = ChatMsgInfo.createDanmuInfo(content,
+                            sendId,
+                            userProfile.getFaceUrl(),
+                            userProfile.getNickName());
+                    mChatListView.addMsgInfo(chatMsgInfo);
+
+                } else if (cmd.getCmd() == Constants.CMD_CHAT_MSG_DANMU) {
+                    //得到的是弹幕消息
+
+                } else if (cmd.getCmd() == Constants.CMD_CHAT_GIFT) {
+                    //得到的消息是自定义的礼物
+
+                } else if (cmd.getCmd() == ILVLiveConstants.ILVLIVE_CMD_ENTER) {
+                    //用户进入直播
+
+                } else if (cmd.getCmd() == ILVLiveConstants.ILVLIVE_CMD_LEAVE) {
+                    //用户离开消息
+
+                }
+
+            }
+
+            @Override
+            public void onNewOtherMsg(TIMMessage message) {
+                //接收到其他消息
+            }
+        });
 
         //创建房间配置项
         ILVLiveRoomOption hostOption = new ILVLiveRoomOption(ILiveLoginManager.getInstance().getMyUserId()).
@@ -71,8 +125,6 @@ public class HostLiveActivity extends AppCompatActivity {
                 //开始发送心跳
                 startHeartBeat();
             }
-
-
 
 
             @Override
@@ -150,6 +202,19 @@ public class HostLiveActivity extends AppCompatActivity {
             @Override
             public void onChatSend(ILVCustomCmd msg) {
                 //发送消息
+                if (msg.getCmd() == Constants.CMD_CHAT_MSG_LIST) {
+                    String chatContent = msg.getParam();
+                    String sendId = CNApplication.getApplication().getSelfProfile().getIdentifier();
+                    String avatar = CNApplication.getApplication().getSelfProfile().getFaceUrl();
+
+                    ChatMsgInfo info = ChatMsgInfo.createListInfo(chatContent, sendId, avatar);
+                    mChatListView.addMsgInfo(info);
+
+                } else if (msg.getCmd() == Constants.CMD_CHAT_MSG_DANMU){
+
+
+
+                }
 
 
             }
@@ -157,6 +222,8 @@ public class HostLiveActivity extends AppCompatActivity {
 
         mControlView.setVisibility(View.VISIBLE);
         mChatView.setVisibility(View.INVISIBLE);
+
+        mChatListView = (ChatMsgListView) findViewById(R.id.chat_list);
 
     }
 
@@ -184,7 +251,6 @@ public class HostLiveActivity extends AppCompatActivity {
     }
 
     private void quitLive() {
-
 
 
     }

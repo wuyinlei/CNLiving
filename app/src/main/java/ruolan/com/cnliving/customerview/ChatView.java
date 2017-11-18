@@ -14,8 +14,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.livesdk.ILVCustomCmd;
+import com.tencent.livesdk.ILVText;
 
 import ruolan.com.cnliving.R;
+import ruolan.com.cnliving.model.Constants;
 
 /**
  * Created by wuyinlei on 2017/11/18.
@@ -89,7 +91,22 @@ public class ChatView extends LinearLayout {
     //发送消息
     private void sendChatMsg() {
 
+        if (mOnChatSendListener != null) {
+            ILVCustomCmd customCmd = new ILVCustomCmd();
+            customCmd.setType(ILVText.ILVTextType.eGroupMsg);
+            boolean isDanmu = mSwitchChatType.isChecked();
+            if (isDanmu) {
+                customCmd.setCmd(Constants.CMD_CHAT_MSG_DANMU);
+            } else {
+                customCmd.setCmd(Constants.CMD_CHAT_MSG_LIST);
+            }
+            customCmd.setParam(mChatContent.getText().toString());
+            mOnChatSendListener.onChatSend(customCmd);//设置消息内容
 
+            //清空消息
+            mChatContent.setText("");
+            mChatContent.setHint("和大家聊点什么吧");
+        }
 
     }
 
