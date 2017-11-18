@@ -12,5 +12,48 @@
         android:background="@android:color/white" />
 
 
+    <FrameLayout
+        android:id="@+id/bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <ruolan.com.cnliving.customerview.BottomControlView
+            android:id="@+id/control_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <ruolan.com.cnliving.customerview.ChatView
+            android:id="@+id/chat_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/chat_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_view"
+        android:orientation="horizontal">
+
+        <ruolan.com.cnliving.customerview.ChatMsgListView
+            android:id="@+id/chat_list"
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:layout_weight="2"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <imooc.com.bearlive.view.DanmuView
+        android:id="@+id/danmu_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
 
 </ruolan.com.cnliving.widget.SizeChangeRelativeLayout>

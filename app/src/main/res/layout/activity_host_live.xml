@@ -48,10 +48,9 @@
             android:layout_weight="1"/>
     </LinearLayout>
 
-    <ruolan.com.cnliving.customerview.DanmuView
+    <imooc.com.bearlive.view.DanmuView
         android:id="@+id/danmu_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/vip_enter" />
+        android:layout_height="wrap_content" />
 
 </ruolan.com.cnliving.widget.SizeChangeRelativeLayout>

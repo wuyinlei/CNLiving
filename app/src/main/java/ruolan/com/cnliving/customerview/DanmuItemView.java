@@ -18,6 +18,8 @@ import ruolan.com.cnliving.util.ImgUtils;
 
 /**
  * Created by wuyinlei on 2017/11/18.
+ *
+ * @function
  */
 
 public class DanmuItemView extends RelativeLayout {
