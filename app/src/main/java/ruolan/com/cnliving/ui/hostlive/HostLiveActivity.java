@@ -3,6 +3,7 @@ package ruolan.com.cnliving.ui.hostlive;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,13 +20,13 @@ import com.tencent.livesdk.ILVLiveManager;
 import com.tencent.livesdk.ILVLiveRoomOption;
 import com.tencent.livesdk.ILVText;
 
-import java.lang.reflect.Constructor;
 
 import ruolan.com.cnliving.CNApplication;
 import ruolan.com.cnliving.R;
 import ruolan.com.cnliving.customerview.BottomControlView;
 import ruolan.com.cnliving.customerview.ChatMsgListView;
 import ruolan.com.cnliving.customerview.ChatView;
+import ruolan.com.cnliving.customerview.DanmuView;
 import ruolan.com.cnliving.model.ChatMsgInfo;
 import ruolan.com.cnliving.model.Constants;
 import ruolan.com.cnliving.widget.SizeChangeRelativeLayout;
@@ -43,6 +44,7 @@ public class HostLiveActivity extends AppCompatActivity {
     private BottomControlView mControlView;
     private ChatView mChatView;
     private ChatMsgListView mChatListView;
+    private DanmuView mDanmuView;
 
     private int mRoomId;
 
@@ -88,6 +90,16 @@ public class HostLiveActivity extends AppCompatActivity {
 
                 } else if (cmd.getCmd() == Constants.CMD_CHAT_MSG_DANMU) {
                     //得到的是弹幕消息
+                    String content = cmd.getParam();
+                    ChatMsgInfo info = ChatMsgInfo.createListInfo(content, sendId, userProfile.getFaceUrl());
+                    mChatListView.addMsgInfo(info);
+
+                    String name = userProfile.getNickName();
+                    if (TextUtils.isEmpty(name)) {
+                        name = userProfile.getIdentifier();
+                    }
+                    ChatMsgInfo danmuInfo = ChatMsgInfo.createDanmuInfo(content, sendId, userProfile.getFaceUrl(), name);
+                    mDanmuView.addMsgInfo(danmuInfo);
 
                 } else if (cmd.getCmd() == Constants.CMD_CHAT_GIFT) {
                     //得到的消息是自定义的礼物
@@ -211,7 +223,18 @@ public class HostLiveActivity extends AppCompatActivity {
                     mChatListView.addMsgInfo(info);
 
                 } else if (msg.getCmd() == Constants.CMD_CHAT_MSG_DANMU){
+                    String chatContent = msg.getParam();
+                    String userId = CNApplication.getApplication().getSelfProfile().getIdentifier();
+                    String avatar = CNApplication.getApplication().getSelfProfile().getFaceUrl();
+                    ChatMsgInfo info = ChatMsgInfo.createListInfo(chatContent, userId, avatar);
+                    mChatListView.addMsgInfo(info);
 
+                    String name = CNApplication.getApplication().getSelfProfile().getNickName();
+                    if (TextUtils.isEmpty(name)) {
+                        name = userId;
+                    }
+                    ChatMsgInfo danmuInfo = ChatMsgInfo.createDanmuInfo(chatContent, userId, avatar, name);
+                    mDanmuView.addMsgInfo(danmuInfo);
 
 
                 }
@@ -224,6 +247,7 @@ public class HostLiveActivity extends AppCompatActivity {
         mChatView.setVisibility(View.INVISIBLE);
 
         mChatListView = (ChatMsgListView) findViewById(R.id.chat_list);
+        mDanmuView = (DanmuView) findViewById(R.id.danmu_view);
 
     }
 
@@ -252,7 +276,7 @@ public class HostLiveActivity extends AppCompatActivity {
 
     private void quitLive() {
 
-
+        finish();
     }
 
 }
