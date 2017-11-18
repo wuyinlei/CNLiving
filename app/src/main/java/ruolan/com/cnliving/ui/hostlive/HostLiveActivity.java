@@ -3,16 +3,20 @@ package ruolan.com.cnliving.ui.hostlive;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.tencent.av.sdk.AVRoomMulti;
 import com.tencent.ilivesdk.ILiveCallBack;
 import com.tencent.ilivesdk.core.ILiveLoginManager;
 import com.tencent.ilivesdk.view.AVRootView;
+import com.tencent.livesdk.ILVCustomCmd;
 import com.tencent.livesdk.ILVLiveManager;
 import com.tencent.livesdk.ILVLiveRoomOption;
 
 import ruolan.com.cnliving.R;
+import ruolan.com.cnliving.customerview.BottomControlView;
+import ruolan.com.cnliving.customerview.ChatView;
 import ruolan.com.cnliving.widget.SizeChangeRelativeLayout;
 
 /**
@@ -25,6 +29,8 @@ public class HostLiveActivity extends AppCompatActivity {
 
     private SizeChangeRelativeLayout mSizeChangeLayout;
     private AVRootView mLiveView;
+    private BottomControlView mControlView;
+    private ChatView mChatView;
 
     private int mRoomId;
 
@@ -98,6 +104,9 @@ public class HostLiveActivity extends AppCompatActivity {
         mSizeChangeLayout.setOnSizeChangeListener(new SizeChangeRelativeLayout.OnSizeChangeListener() {
             @Override
             public void onLarge() {
+                //键盘隐藏
+                mChatView.setVisibility(View.INVISIBLE);
+                mControlView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -108,6 +117,47 @@ public class HostLiveActivity extends AppCompatActivity {
 
         mLiveView = (AVRootView) findViewById(R.id.live_view);
         ILVLiveManager.getInstance().setAvVideoView(mLiveView);
+
+        mControlView = (BottomControlView) findViewById(R.id.control_view);
+        mControlView.setIsHost(true);
+        mControlView.setOnControlListener(new BottomControlView.OnControlListener() {
+            @Override
+            public void onChatClick() {
+                //点击了聊天按钮，显示聊天操作栏
+                mChatView.setVisibility(View.VISIBLE);
+                mControlView.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onCloseClick() {
+                // 点击了关闭按钮，关闭直播
+                quitLive();
+            }
+
+            @Override
+            public void onGiftClick() {
+                //主播界面，不能发送礼物
+            }
+
+            @Override
+            public void onOptionClick(View view) {
+                //显示主播操作对话框
+            }
+        });
+
+        mChatView = (ChatView) findViewById(R.id.chat_view);
+        mChatView.setOnChatSendListener(new ChatView.OnChatSendListener() {
+            @Override
+            public void onChatSend(ILVCustomCmd msg) {
+                //发送消息
+
+
+            }
+        });
+
+        mControlView.setVisibility(View.VISIBLE);
+        mChatView.setVisibility(View.INVISIBLE);
+
     }
 
     @Override

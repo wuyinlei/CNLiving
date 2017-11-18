@@ -31,7 +31,8 @@
 
         <activity android:name=".ui.live.CreateLiveActivity"/>
 
-        <activity android:name=".ui.hostlive.HostLiveActivity"/>
+        <activity android:name=".ui.hostlive.HostLiveActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".ui.watcher.WatcherActivity"/>
     </application>
 

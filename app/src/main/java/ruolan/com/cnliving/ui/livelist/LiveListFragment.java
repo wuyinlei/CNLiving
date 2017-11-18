@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -71,7 +72,16 @@ public class LiveListFragment extends Fragment {
 
         //进入界面之后主动刷新数据
         mSwipeRefreshLayout.setRefreshing(true);
-        requestLiveList();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                requestLiveList();
+            }
+        },1000);
+
+
+
 
     }
 

@@ -10,4 +10,23 @@
         android:layout_height="match_parent"
         android:background="@android:color/white" />
 
+
+    <FrameLayout
+        android:id="@+id/bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <ruolan.com.cnliving.customerview.BottomControlView
+            android:id="@+id/control_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ruolan.com.cnliving.customerview.ChatView
+            android:id="@+id/chat_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+
+
 </ruolan.com.cnliving.widget.SizeChangeRelativeLayout>

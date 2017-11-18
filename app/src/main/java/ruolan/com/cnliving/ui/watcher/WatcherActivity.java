@@ -51,6 +51,7 @@ public class WatcherActivity extends AppCompatActivity {
                 .authBits(AVRoomMulti.AUTH_BITS_JOIN_ROOM | AVRoomMulti.AUTH_BITS_RECV_AUDIO | AVRoomMulti.AUTH_BITS_RECV_CAMERA_VIDEO | AVRoomMulti.AUTH_BITS_RECV_SCREEN_VIDEO) //权限设置
                 .videoRecvMode(AVRoomMulti.VIDEO_RECV_MODE_SEMI_AUTO_RECV_CAMERA_VIDEO) //是否开始半自动接收
                 .autoMic(false);//是否自动打开mic
+
         //加入房间
         ILVLiveManager.getInstance().joinRoom(mRoomId, memberOption, new ILiveCallBack() {
             @Override
