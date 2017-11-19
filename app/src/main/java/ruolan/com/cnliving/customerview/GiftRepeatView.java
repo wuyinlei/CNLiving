@@ -95,6 +95,7 @@ public class GiftRepeatView extends LinearLayout {
         if (item1.getVisibility() == INVISIBLE) {
             return item1;
         }
+
         return null;
     }
 

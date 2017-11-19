@@ -11,6 +11,11 @@
         android:layout_height="match_parent"
         android:background="@android:color/white"/>
 
+    <imooc.com.bearlive.view.TitleView
+        android:id="@+id/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 
     <FrameLayout
         android:id="@+id/bottom_view"
@@ -67,5 +72,9 @@
         android:layout_height="match_parent"
         android:layout_above="@id/vip_enter"/>
 
+    <ruolan.com.cnliving.customerview.GiftFullView
+        android:id="@+id/gift_full_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </ruolan.com.cnliving.widget.SizeChangeRelativeLayout>

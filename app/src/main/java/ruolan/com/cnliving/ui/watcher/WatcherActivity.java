@@ -27,7 +27,10 @@ import ruolan.com.cnliving.customerview.BottomControlView;
 import ruolan.com.cnliving.customerview.ChatMsgListView;
 import ruolan.com.cnliving.customerview.ChatView;
 import ruolan.com.cnliving.customerview.DanmuView;
+import ruolan.com.cnliving.customerview.GiftFullView;
 import ruolan.com.cnliving.customerview.GiftRepeatView;
+import ruolan.com.cnliving.customerview.TitleView;
+import ruolan.com.cnliving.customerview.VipEnterView;
 import ruolan.com.cnliving.model.ChatMsgInfo;
 import ruolan.com.cnliving.model.Constants;
 import ruolan.com.cnliving.model.GiftCmdInfo;
@@ -53,6 +56,10 @@ public class WatcherActivity extends AppCompatActivity {
     private DanmuView mDanmuView;
     private GiftSelectDialog giftSelectDialog;
     private GiftRepeatView giftRepeatView;
+    private GiftFullView giftFullView;
+
+    private TitleView titleView;
+    private VipEnterView mVipEnterView;
 
 
     @Override
@@ -127,9 +134,18 @@ public class WatcherActivity extends AppCompatActivity {
 
                 } else if (cmd.getCmd() == ILVLiveConstants.ILVLIVE_CMD_ENTER) {
                     //用户进入直播
-
+                    titleView.addWatcher(userProfile);
+                    mVipEnterView.showVipEnter(userProfile);
                 } else if (cmd.getCmd() == ILVLiveConstants.ILVLIVE_CMD_LEAVE) {
                     //用户离开消息
+                    //用户离开消息
+                    if (hostId.equals(userProfile.getIdentifier())) {
+                        //主播退出直播，
+                        quitRoom();
+                    } else {
+                        //观众退出直播
+                        titleView.removeWatcher(userProfile);
+                    }
 
                 }
 
@@ -308,6 +324,10 @@ public class WatcherActivity extends AppCompatActivity {
         mChatListView = (ChatMsgListView) findViewById(R.id.chat_list);
         mDanmuView = (DanmuView) findViewById(R.id.danmu_view);
         giftRepeatView = (GiftRepeatView) findViewById(R.id.gift_repeat_view);
+        giftFullView = (GiftFullView) findViewById(R.id.gift_full_view);
+
+        mVipEnterView = (VipEnterView) findViewById(R.id.vip_enter);
+        titleView = (TitleView) findViewById(R.id.title_view);
 
     }
 
@@ -334,6 +354,7 @@ public class WatcherActivity extends AppCompatActivity {
 
                         } else if (giftInfo.type == GiftInfo.Type.FullScreenGift) {
                             //全屏礼物
+                            giftFullView.showGift(giftInfo, CNApplication.getApplication().getSelfProfile());
 
                         }
                     }

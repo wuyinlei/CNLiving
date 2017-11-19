@@ -29,7 +29,10 @@ import ruolan.com.cnliving.customerview.BottomControlView;
 import ruolan.com.cnliving.customerview.ChatMsgListView;
 import ruolan.com.cnliving.customerview.ChatView;
 import ruolan.com.cnliving.customerview.DanmuView;
+import ruolan.com.cnliving.customerview.GiftFullView;
 import ruolan.com.cnliving.customerview.GiftRepeatView;
+import ruolan.com.cnliving.customerview.TitleView;
+import ruolan.com.cnliving.customerview.VipEnterView;
 import ruolan.com.cnliving.model.ChatMsgInfo;
 import ruolan.com.cnliving.model.Constants;
 import ruolan.com.cnliving.model.GiftCmdInfo;
@@ -51,6 +54,10 @@ public class HostLiveActivity extends AppCompatActivity {
     private ChatMsgListView mChatListView;
     private DanmuView mDanmuView;
     private GiftRepeatView giftRepeatView;
+    private GiftFullView giftFullView;
+    private TitleView mTitleView;
+
+    private VipEnterView mVipEnterView;
 
     private int mRoomId;
 
@@ -120,15 +127,19 @@ public class HostLiveActivity extends AppCompatActivity {
                     if (giftInfo.type == GiftInfo.Type.ContinueGift) {
                         giftRepeatView.showGift(giftInfo, repeatId, userProfile);
                     } else if (giftInfo.type == GiftInfo.Type.FullScreenGift) {
+                        //全屏礼物
+                        giftFullView.showGift(giftInfo, userProfile);
                     }
 
 
                 } else if (cmd.getCmd() == ILVLiveConstants.ILVLIVE_CMD_ENTER) {
                     //用户进入直播
+                    mTitleView.addWatcher(userProfile);
+                    mVipEnterView.showVipEnter(userProfile);
 
                 } else if (cmd.getCmd() == ILVLiveConstants.ILVLIVE_CMD_LEAVE) {
                     //用户离开消息
-
+                    mTitleView.removeWatcher(userProfile);
                 }
 
             }
@@ -285,6 +296,11 @@ public class HostLiveActivity extends AppCompatActivity {
         mChatListView = (ChatMsgListView) findViewById(R.id.chat_list);
         mDanmuView = (DanmuView) findViewById(R.id.danmu_view);
         giftRepeatView = (GiftRepeatView) findViewById(R.id.gift_repeat_view);
+        giftFullView = (GiftFullView) findViewById(R.id.gift_full_view);
+        mTitleView = (TitleView) findViewById(R.id.title_view);
+        mTitleView.setHost(CNApplication.getApplication().getSelfProfile());
+
+        mVipEnterView = (VipEnterView) findViewById(R.id.vip_enter);
 
     }
 
