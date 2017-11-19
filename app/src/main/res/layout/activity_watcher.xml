@@ -11,6 +11,11 @@
         android:layout_height="match_parent"
         android:background="@android:color/white"/>
 
+    <ruolan.com.cnliving.customerview.TitleView
+        android:id="@+id/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"/>
 
     <FrameLayout
         android:id="@+id/bottom_view"
@@ -62,6 +67,13 @@
         android:layout_above="@id/chat_list_view"/>
 
 
+    <tyrantgit.widget.HeartLayout
+        android:id="@+id/heart_layout"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"/>
+
+
     <ruolan.com.cnliving.customerview.GiftRepeatView
         android:id="@+id/gift_repeat_view"
         android:layout_width="wrap_content"
@@ -71,6 +83,6 @@
     <ruolan.com.cnliving.customerview.GiftFullView
         android:id="@+id/gift_full_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </ruolan.com.cnliving.widget.SizeChangeRelativeLayout>

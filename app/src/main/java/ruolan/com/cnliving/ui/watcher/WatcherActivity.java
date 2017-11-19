@@ -1,5 +1,6 @@
 package ruolan.com.cnliving.ui.watcher;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +9,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.tencent.TIMCallBack;
+import com.tencent.TIMFriendshipManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMUserProfile;
+import com.tencent.TIMValueCallBack;
 import com.tencent.av.sdk.AVRoomMulti;
 import com.tencent.ilivesdk.ILiveCallBack;
 import com.tencent.ilivesdk.core.ILiveRoomManager;
@@ -21,7 +25,12 @@ import com.tencent.livesdk.ILVLiveManager;
 import com.tencent.livesdk.ILVLiveRoomOption;
 import com.tencent.livesdk.ILVText;
 
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import ruolan.com.cnliving.CNApplication;
+import ruolan.com.cnliving.CustomProfile;
 import ruolan.com.cnliving.R;
 import ruolan.com.cnliving.customerview.BottomControlView;
 import ruolan.com.cnliving.customerview.ChatMsgListView;
@@ -35,8 +44,12 @@ import ruolan.com.cnliving.model.ChatMsgInfo;
 import ruolan.com.cnliving.model.Constants;
 import ruolan.com.cnliving.model.GiftCmdInfo;
 import ruolan.com.cnliving.model.GiftInfo;
+import ruolan.com.cnliving.model.UserInfo;
+import ruolan.com.cnliving.ui.live.CreateRoomRequest;
+import ruolan.com.cnliving.util.request.BaseRequest;
 import ruolan.com.cnliving.widget.GiftSelectDialog;
 import ruolan.com.cnliving.widget.SizeChangeRelativeLayout;
+import tyrantgit.widget.HeartLayout;
 
 /**
  * Created by wuyinlei on 2017/11/17.
@@ -61,6 +74,10 @@ public class WatcherActivity extends AppCompatActivity {
     private TitleView titleView;
     private VipEnterView mVipEnterView;
 
+    private Timer heartBeatTimer = new Timer();
+    private Timer heartTimer = new Timer();
+    private Random heartRandom = new Random();
+    private HeartLayout heartLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -127,7 +144,9 @@ public class WatcherActivity extends AppCompatActivity {
                     if (giftInfo == null) {
                         return;
                     }
-                    if (giftInfo.type == GiftInfo.Type.ContinueGift) {
+                    if (giftInfo.giftId == GiftInfo.Gift_Heart.giftId) {
+                        heartLayout.addHeart(getRandomColor());
+                    } else if (giftInfo.type == GiftInfo.Type.ContinueGift) {
                         giftRepeatView.showGift(giftInfo, repeatId, userProfile);
                     } else if (giftInfo.type == GiftInfo.Type.FullScreenGift) {
                     }
@@ -192,7 +211,13 @@ public class WatcherActivity extends AppCompatActivity {
     }
 
     private void startHeartBeat() {
+        heartBeatTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                //发送心跳包
 
+            }
+        }, 0, 4000); //4秒钟 。服务器是10秒钟去检测一次。
 
     }
 
@@ -201,13 +226,41 @@ public class WatcherActivity extends AppCompatActivity {
     }
 
     private void sendEnterRoomMsg() {
+        ILVCustomCmd customCmd = new ILVCustomCmd();
+        customCmd.setType(ILVText.ILVTextType.eGroupMsg);
+        customCmd.setCmd(ILVLiveConstants.ILVLIVE_CMD_ENTER);
+        customCmd.setDestId(ILiveRoomManager.getInstance().getIMGroupId());
+        ILVLiveManager.getInstance().sendCustomCmd(customCmd, new ILiveCallBack() {
+            @Override
+            public void onSuccess(Object data) {
 
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+
+            }
+        });
 
     }
 
     private void startHeartAnim() {
+        heartTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                heartLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        heartLayout.addHeart(getRandomColor());
+                    }
+                });
+            }
+        }, 0, 1000); //1秒钟
 
+    }
 
+    private int getRandomColor() {
+        return Color.rgb(heartRandom.nextInt(255), heartRandom.nextInt(255), heartRandom.nextInt(255));
     }
 
     private void quitRoom() {
@@ -328,6 +381,32 @@ public class WatcherActivity extends AppCompatActivity {
 
         mVipEnterView = (VipEnterView) findViewById(R.id.vip_enter);
         titleView = (TitleView) findViewById(R.id.title_view);
+        heartLayout = (HeartLayout) findViewById(R.id.heart_layout);
+        heartLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ILVCustomCmd giftCmd = new ILVCustomCmd();
+                giftCmd.setType(ILVText.ILVTextType.eGroupMsg);
+                giftCmd.setCmd(Constants.CMD_CHAT_GIFT);
+                GiftCmdInfo giftCmdInfo = new GiftCmdInfo();
+                giftCmdInfo.giftId = GiftInfo.Gift_Heart.giftId;
+                giftCmd.setParam(new Gson().toJson(giftCmdInfo));
+
+                giftCmd.setDestId(ILiveRoomManager.getInstance().getIMGroupId());
+
+                ILVLiveManager.getInstance().sendCustomCmd(giftCmd, new ILiveCallBack<TIMMessage>() {
+                    @Override
+                    public void onSuccess(TIMMessage data) {
+                        heartLayout.addHeart(getRandomColor());
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                    }
+
+                });
+            }
+        });
 
     }
 
@@ -357,6 +436,66 @@ public class WatcherActivity extends AppCompatActivity {
                             giftFullView.showGift(giftInfo, CNApplication.getApplication().getSelfProfile());
 
                         }
+
+                        SendOrGetGiftRequest.SendOrGetGiftParam param = new SendOrGetGiftRequest.SendOrGetGiftParam();
+                        TIMUserProfile selfProfile = CNApplication.getApplication().getSelfProfile();
+                        param.userId = selfProfile.getIdentifier();
+                        param.exp = giftInfo.expValue;
+
+                        //发送礼物
+                        SendOrGetGiftRequest request = new SendOrGetGiftRequest();
+                        request.request(request.getUrl(param, true));
+                        request.setOnResultListener(new BaseRequest.OnResultListener<UserInfo>() {
+                            @Override
+                            public void onFail(int code, String msg) {
+
+                            }
+
+                            @Override
+                            public void onSuccess(UserInfo userInfo) {
+
+                                //更新用户等级信息
+                                TIMFriendshipManager.getInstance().setCustomInfo(CustomProfile.CUSTOM_LEVEL,
+                                        (userInfo.getUserLevel() + "").getBytes(), new TIMCallBack() {
+                                            @Override
+                                            public void onError(int i, String s) {
+
+                                            }
+
+                                            @Override
+                                            public void onSuccess() {
+                                                getSelfProfile();
+                                            }
+                                        });
+
+                                TIMFriendshipManager.getInstance().setCustomInfo(CustomProfile.CUSTOM_GET,
+                                        (userInfo.getGetNums() + "").getBytes(), new TIMCallBack() {
+                                            @Override
+                                            public void onError(int i, String s) {
+
+                                            }
+
+                                            @Override
+                                            public void onSuccess() {
+                                                getSelfProfile();
+                                            }
+                                        });
+
+                                TIMFriendshipManager.getInstance().setCustomInfo(CustomProfile.CUSTOM_SEND,
+                                        (userInfo.getSendNums() + "").getBytes(), new TIMCallBack() {
+                                            @Override
+                                            public void onError(int i, String s) {
+
+                                            }
+
+                                            @Override
+                                            public void onSuccess() {
+                                                getSelfProfile();
+                                            }
+                                        });
+                            }
+
+                        });
                     }
                 }
 
@@ -394,6 +533,20 @@ public class WatcherActivity extends AppCompatActivity {
     private void quitLive() {
 
         finish();
+    }
+
+    private void getSelfProfile(){
+        TIMFriendshipManager.getInstance().getSelfProfile(new TIMValueCallBack<TIMUserProfile>() {
+            @Override
+            public void onError(int i, String s) {
+
+            }
+
+            @Override
+            public void onSuccess(TIMUserProfile timUserProfile) {
+                CNApplication.getApplication().setSelfProfile(timUserProfile);
+            }
+        });
     }
 
 }

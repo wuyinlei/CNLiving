@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:background="@android:color/white"/>
 
-    <imooc.com.bearlive.view.TitleView
+    <ruolan.com.cnliving.customerview.TitleView
         android:id="@+id/title_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -58,6 +58,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <tyrantgit.widget.HeartLayout
+        android:id="@+id/heart_layout"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true" />
 
     <ruolan.com.cnliving.customerview.VipEnterView
         android:id="@+id/vip_enter"
