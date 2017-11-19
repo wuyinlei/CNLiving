@@ -16,6 +16,7 @@ import com.tencent.TIMUserProfile;
 import com.tencent.TIMValueCallBack;
 import com.tencent.av.sdk.AVRoomMulti;
 import com.tencent.ilivesdk.ILiveCallBack;
+import com.tencent.ilivesdk.ILiveConstants;
 import com.tencent.ilivesdk.core.ILiveLoginManager;
 import com.tencent.ilivesdk.core.ILiveRoomManager;
 import com.tencent.ilivesdk.view.AVRootView;
@@ -49,6 +50,7 @@ import ruolan.com.cnliving.model.GiftInfo;
 import ruolan.com.cnliving.model.UserInfo;
 import ruolan.com.cnliving.ui.watcher.SendOrGetGiftRequest;
 import ruolan.com.cnliving.util.request.BaseRequest;
+import ruolan.com.cnliving.widget.HostControlDialog;
 import ruolan.com.cnliving.widget.SizeChangeRelativeLayout;
 import tyrantgit.widget.HeartLayout;
 
@@ -74,6 +76,9 @@ public class HostLiveActivity extends AppCompatActivity {
 
     private VipEnterView mVipEnterView;
 
+    private HostControlState hostControlState;
+    private FlashlightHelper flashlightHelper;
+
     private int mRoomId;
 
     private Timer heartTimer = new Timer();
@@ -93,6 +98,8 @@ public class HostLiveActivity extends AppCompatActivity {
     //创建直播
     private void createLive() {
 
+        hostControlState = new HostControlState();
+        flashlightHelper = new FlashlightHelper();
 
         mRoomId = getIntent().getIntExtra("roomId", -1);
         if (mRoomId < 0) {
@@ -236,7 +243,9 @@ public class HostLiveActivity extends AppCompatActivity {
         ILVLiveRoomOption hostOption = new ILVLiveRoomOption(ILiveLoginManager.getInstance().getMyUserId()).
                 controlRole("LiveMaster")//角色设置
                 .autoFocus(true)
+                .autoMic(hostControlState.isVoiceOn())
                 .authBits(AVRoomMulti.AUTH_BITS_DEFAULT)//权限设置
+                .cameraId(hostControlState.getCameraid())//摄像头前置后置
                 .videoRecvMode(AVRoomMulti.VIDEO_RECV_MODE_SEMI_AUTO_RECV_CAMERA_VIDEO);//是否开始半自动接收
 
 
@@ -339,6 +348,16 @@ public class HostLiveActivity extends AppCompatActivity {
             @Override
             public void onOptionClick(View view) {
                 //显示主播操作对话框
+
+                boolean beautyOn = hostControlState.isBeautyOn();
+                boolean flashOn = flashlightHelper.isFlashLightOn();
+                boolean voiceOn = hostControlState.isVoiceOn();
+
+                HostControlDialog hostControlDialog = new HostControlDialog(HostLiveActivity.this);
+
+                hostControlDialog.setOnControlClickListener(controlClickListener);
+                hostControlDialog.updateView(beautyOn, flashOn, voiceOn);
+                hostControlDialog.show(view);
             }
         });
 
@@ -405,6 +424,61 @@ public class HostLiveActivity extends AppCompatActivity {
 
         heartLayout = (HeartLayout) findViewById(R.id.heart_layout);
     }
+
+    private HostControlDialog.OnControlClickListener controlClickListener = new HostControlDialog.OnControlClickListener() {
+        @Override
+        public void onBeautyClick() {
+            //点击美颜
+            boolean isBeautyOn = hostControlState.isBeautyOn();
+            if (isBeautyOn) {
+                //关闭美颜
+                ILiveRoomManager.getInstance().enableBeauty(0);
+                hostControlState.setBeautyOn(false);
+            } else {
+                //打开美颜
+                ILiveRoomManager.getInstance().enableBeauty(50);
+                hostControlState.setBeautyOn(true);
+            }
+        }
+
+        @Override
+        public void onFlashClick() {
+            // 闪光灯
+            boolean isFlashOn = flashlightHelper.isFlashLightOn();
+            if (isFlashOn) {
+                flashlightHelper.enableFlashLight(false);
+            } else {
+                flashlightHelper.enableFlashLight(true);
+            }
+        }
+
+        @Override
+        public void onVoiceClick() {
+            //声音
+            boolean isVoiceOn = hostControlState.isVoiceOn();
+            if (isVoiceOn) {
+                //静音
+                ILiveRoomManager.getInstance().enableMic(false);
+                hostControlState.setVoiceOn(false);
+            } else {
+                ILiveRoomManager.getInstance().enableMic(true);
+                hostControlState.setVoiceOn(true);
+            }
+        }
+
+        @Override
+        public void onCameraClick() {
+            int cameraId = hostControlState.getCameraid();
+            if (cameraId == ILiveConstants.FRONT_CAMERA) {
+                ILiveRoomManager.getInstance().switchCamera(ILiveConstants.BACK_CAMERA);
+                hostControlState.setCameraid(ILiveConstants.BACK_CAMERA);
+            } else if (cameraId == ILiveConstants.BACK_CAMERA) {
+                ILiveRoomManager.getInstance().switchCamera(ILiveConstants.FRONT_CAMERA);
+                hostControlState.setCameraid(ILiveConstants.FRONT_CAMERA);
+            }
+        }
+    };
+
 
     @Override
     protected void onPause() {

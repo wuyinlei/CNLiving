@@ -4,6 +4,8 @@ import com.tencent.ilivesdk.ILiveConstants;
 
 /**
  * Created by wuyinlei on 2017/11/19.
+ *
+ * @function
  */
 
 public class HostControlState {
