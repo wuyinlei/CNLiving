@@ -27,6 +27,7 @@ import ruolan.com.cnliving.customerview.BottomControlView;
 import ruolan.com.cnliving.customerview.ChatMsgListView;
 import ruolan.com.cnliving.customerview.ChatView;
 import ruolan.com.cnliving.customerview.DanmuView;
+import ruolan.com.cnliving.customerview.GiftRepeatView;
 import ruolan.com.cnliving.model.ChatMsgInfo;
 import ruolan.com.cnliving.model.Constants;
 import ruolan.com.cnliving.model.GiftCmdInfo;
@@ -51,6 +52,7 @@ public class WatcherActivity extends AppCompatActivity {
     private ChatMsgListView mChatListView;
     private DanmuView mDanmuView;
     private GiftSelectDialog giftSelectDialog;
+    private GiftRepeatView giftRepeatView;
 
 
     @Override
@@ -67,7 +69,7 @@ public class WatcherActivity extends AppCompatActivity {
     private void joinRoom() {
         mRoomId = getIntent().getIntExtra("roomId", -1);
         hostId = getIntent().getStringExtra("hostId");
-        if (mRoomId < 0 || TextUtils .isEmpty(hostId)) {
+        if (mRoomId < 0 || TextUtils.isEmpty(hostId)) {
             return;
         }
 
@@ -93,6 +95,7 @@ public class WatcherActivity extends AppCompatActivity {
 
                     mChatListView.addMsgInfo(chatMsgInfo);
 
+
                 } else if (cmd.getCmd() == Constants.CMD_CHAT_MSG_DANMU) {
                     //得到的是弹幕消息
                     String content = cmd.getParam();
@@ -108,6 +111,19 @@ public class WatcherActivity extends AppCompatActivity {
 
                 } else if (cmd.getCmd() == Constants.CMD_CHAT_GIFT) {
                     //得到的消息是自定义的礼物
+
+                    //界面显示礼物动画。
+                    GiftCmdInfo giftCmdInfo = new Gson().fromJson(cmd.getParam(), GiftCmdInfo.class);
+                    int giftId = giftCmdInfo.giftId;
+                    String repeatId = giftCmdInfo.repeatId;
+                    GiftInfo giftInfo = GiftInfo.getGiftById(giftId);
+                    if (giftInfo == null) {
+                        return;
+                    }
+                    if (giftInfo.type == GiftInfo.Type.ContinueGift) {
+                        giftRepeatView.showGift(giftInfo, repeatId, userProfile);
+                    } else if (giftInfo.type == GiftInfo.Type.FullScreenGift) {
+                    }
 
                 } else if (cmd.getCmd() == ILVLiveConstants.ILVLIVE_CMD_ENTER) {
                     //用户进入直播
@@ -151,17 +167,15 @@ public class WatcherActivity extends AppCompatActivity {
 
             @Override
             public void onError(String module, int errCode, String errMsg) {
-                Toast.makeText(WatcherActivity.this,"直播已结束",Toast.LENGTH_SHORT).show();
+                Toast.makeText(WatcherActivity.this, "直播已结束", Toast.LENGTH_SHORT).show();
                 quitRoom();
             }
         });
 
 
-
     }
 
     private void startHeartBeat() {
-
 
 
     }
@@ -176,7 +190,6 @@ public class WatcherActivity extends AppCompatActivity {
     }
 
     private void startHeartAnim() {
-
 
 
     }
@@ -208,7 +221,7 @@ public class WatcherActivity extends AppCompatActivity {
         ILVLiveManager.getInstance().setAvVideoView(mLiveView);
 
         mControlView = (BottomControlView) findViewById(R.id.control_view);
-        mControlView.setIsHost(true);
+        mControlView.setIsHost(false);
         mControlView.setOnControlListener(new BottomControlView.OnControlListener() {
             @Override
             public void onChatClick() {
@@ -248,6 +261,7 @@ public class WatcherActivity extends AppCompatActivity {
 
                 msg.setDestId(ILiveRoomManager.getInstance().getIMGroupId());
 
+                //调用腾讯的sdk发送消息  这一步不走的话  是发布出去消息的
                 ILVLiveManager.getInstance().sendCustomCmd(msg, new ILiveCallBack() {
                     @Override
                     public void onSuccess(Object data) {
@@ -260,7 +274,7 @@ public class WatcherActivity extends AppCompatActivity {
                             ChatMsgInfo info = ChatMsgInfo.createListInfo(chatContent, sendId, avatar);
                             mChatListView.addMsgInfo(info);
 
-                        } else if (msg.getCmd() == Constants.CMD_CHAT_MSG_DANMU){
+                        } else if (msg.getCmd() == Constants.CMD_CHAT_MSG_DANMU) {
                             String chatContent = msg.getParam();
                             String userId = CNApplication.getApplication().getSelfProfile().getIdentifier();
                             String avatar = CNApplication.getApplication().getSelfProfile().getFaceUrl();
@@ -285,8 +299,6 @@ public class WatcherActivity extends AppCompatActivity {
                 });
 
 
-
-
             }
         });
 
@@ -295,6 +307,7 @@ public class WatcherActivity extends AppCompatActivity {
 
         mChatListView = (ChatMsgListView) findViewById(R.id.chat_list);
         mDanmuView = (DanmuView) findViewById(R.id.danmu_view);
+        giftRepeatView = (GiftRepeatView) findViewById(R.id.gift_repeat_view);
 
     }
 
@@ -317,7 +330,7 @@ public class WatcherActivity extends AppCompatActivity {
                             return;
                         }
                         if (giftInfo.type == GiftInfo.Type.ContinueGift) {
-
+                            giftRepeatView.showGift(giftInfo, repeatId, CNApplication.getApplication().getSelfProfile());
 
                         } else if (giftInfo.type == GiftInfo.Type.FullScreenGift) {
                             //全屏礼物

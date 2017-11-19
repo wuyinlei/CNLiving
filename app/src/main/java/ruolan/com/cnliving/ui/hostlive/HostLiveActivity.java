@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.tencent.TIMMessage;
 import com.tencent.TIMUserProfile;
 import com.tencent.av.sdk.AVRoomMulti;
@@ -28,8 +29,11 @@ import ruolan.com.cnliving.customerview.BottomControlView;
 import ruolan.com.cnliving.customerview.ChatMsgListView;
 import ruolan.com.cnliving.customerview.ChatView;
 import ruolan.com.cnliving.customerview.DanmuView;
+import ruolan.com.cnliving.customerview.GiftRepeatView;
 import ruolan.com.cnliving.model.ChatMsgInfo;
 import ruolan.com.cnliving.model.Constants;
+import ruolan.com.cnliving.model.GiftCmdInfo;
+import ruolan.com.cnliving.model.GiftInfo;
 import ruolan.com.cnliving.widget.SizeChangeRelativeLayout;
 
 /**
@@ -46,6 +50,7 @@ public class HostLiveActivity extends AppCompatActivity {
     private ChatView mChatView;
     private ChatMsgListView mChatListView;
     private DanmuView mDanmuView;
+    private GiftRepeatView giftRepeatView;
 
     private int mRoomId;
 
@@ -104,6 +109,19 @@ public class HostLiveActivity extends AppCompatActivity {
 
                 } else if (cmd.getCmd() == Constants.CMD_CHAT_GIFT) {
                     //得到的消息是自定义的礼物
+                    //界面显示礼物动画。
+                    GiftCmdInfo giftCmdInfo = new Gson().fromJson(cmd.getParam(), GiftCmdInfo.class);
+                    int giftId = giftCmdInfo.giftId;
+                    String repeatId = giftCmdInfo.repeatId;
+                    GiftInfo giftInfo = GiftInfo.getGiftById(giftId);
+                    if (giftInfo == null) {
+                        return;
+                    }
+                    if (giftInfo.type == GiftInfo.Type.ContinueGift) {
+                        giftRepeatView.showGift(giftInfo, repeatId, userProfile);
+                    } else if (giftInfo.type == GiftInfo.Type.FullScreenGift) {
+                    }
+
 
                 } else if (cmd.getCmd() == ILVLiveConstants.ILVLIVE_CMD_ENTER) {
                     //用户进入直播
@@ -266,6 +284,7 @@ public class HostLiveActivity extends AppCompatActivity {
 
         mChatListView = (ChatMsgListView) findViewById(R.id.chat_list);
         mDanmuView = (DanmuView) findViewById(R.id.danmu_view);
+        giftRepeatView = (GiftRepeatView) findViewById(R.id.gift_repeat_view);
 
     }
 

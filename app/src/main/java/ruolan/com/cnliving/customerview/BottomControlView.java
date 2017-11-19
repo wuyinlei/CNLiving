@@ -35,6 +35,11 @@ public class BottomControlView extends RelativeLayout {
         init();
     }
 
+    /**
+     * 设置是否是主播界面
+     *
+     * @param isHost true主播界面  false观众界面
+     */
     public void setIsHost(boolean isHost) {
         if (isHost) {
             giftView.setVisibility(INVISIBLE);

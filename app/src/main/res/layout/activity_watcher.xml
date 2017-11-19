@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ruolan.com.cnliving.widget.SizeChangeRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/size_change_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                                                     android:id="@+id/size_change_layout"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent">
 
 
     <com.tencent.ilivesdk.view.AVRootView
         android:id="@+id/live_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white" />
+        android:background="@android:color/white"/>
 
 
     <FrameLayout
@@ -51,9 +51,22 @@
     <ruolan.com.cnliving.customerview.DanmuView
         android:id="@+id/danmu_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_above="@id/chat_list_view"/>
 
 
+    <ruolan.com.cnliving.customerview.VipEnterView
+        android:id="@+id/vip_enter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/chat_list_view"/>
+
+
+    <ruolan.com.cnliving.customerview.GiftRepeatView
+        android:id="@+id/gift_repeat_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/vip_enter"/>
 
 
 </ruolan.com.cnliving.widget.SizeChangeRelativeLayout>

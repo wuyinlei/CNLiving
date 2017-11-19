@@ -66,7 +66,7 @@ public class GiftSelectDialog extends TransParentNoDimDialog {
     public GiftSelectDialog(Activity activity) {
         super(activity);
 
-        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_gift_select, null, false);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(activity).inflate(R.layout.dialog_gift_select, null, false);
         setContentView(view);
 
         setWidthAndHeight(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);

@@ -53,4 +53,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+
+    <ruolan.com.cnliving.customerview.VipEnterView
+        android:id="@+id/vip_enter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/chat_list_view"/>
+
+
+    <ruolan.com.cnliving.customerview.GiftRepeatView
+        android:id="@+id/gift_repeat_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/vip_enter"/>
+
+
 </ruolan.com.cnliving.widget.SizeChangeRelativeLayout>
